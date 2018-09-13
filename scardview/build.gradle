@@ -37,3 +37,59 @@ dependencies {
 repositories {
     mavenCentral()
 }
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+signing {
+    sign configurations.archives
+}
+
+group = "io.github.meetsl"
+archivesBaseName = "SCardView"
+version = "1.0"
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment {
+                MavenDeployment deployment -> signing.signPom(deployment)
+            }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            pom.project {
+                name 'SCardView'
+                packaging 'aar'
+                description 'This is a view that is similar to the CardView of google ，but it can change the position of shadow and the shadow color of it . '
+                url 'https://github.com/meetsl/SCardView-master'
+
+                scm {
+                    connection 'scm:git:https://github.com/meetsl/SCardView-master.git'
+                    developerConnection 'scm:git:https://github.com/meetsl/SCardView-master.git'
+                    url 'https://github.com/meetsl/SCardView-master.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'meet_sl'
+                        name 'meetsl'
+                        email 'dboy_sl@163.com'
+                    }
+                }
+            }
+        }
+    }
+}
