@@ -22,7 +22,7 @@
             <enum name="RT" value="6" />
             <enum name="LB" value="7" />
             <enum name="RB" value="8" />
-            <enum name="NONE" value="9" />
+            <enum name="none" value="9" />
         </attr>
         <attr name="cardShadowStartColor" format="color" />
         <attr name="cardShadowEndColor" format="color" />

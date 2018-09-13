@@ -4,17 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_purple"
     tools:context=".MainActivity">
 
     <com.meetsl.scardview.SCardView
         android:layout_width="@dimen/card_size"
         android:layout_height="@dimen/card_size"
         android:layout_margin="20dp"
+        android:onClick="jump"
         app:cardBackgroundColor="@android:color/holo_blue_light"
+        app:cardShadowStartColor="#3733B5E5"
+        app:cardShadowEndColor="#0333B5E5"
         app:cardCornerRadius="5dp"
-        app:cardLightDirection="NONE"
-        app:cardElevation="@dimen/cardview_elevation">
+        app:cardElevation="@dimen/cardview_elevation"
+        app:cardLightDirection="none">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="none"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -26,13 +37,75 @@
     <com.meetsl.scardview.SCardView
         android:layout_width="@dimen/card_size"
         android:layout_height="@dimen/card_size"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="100dp"
-        android:layout_marginRight="20dp"
-        app:cardBackgroundColor="@android:color/holo_blue_light"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="20dp"
+        app:cardBackgroundColor="@android:color/holo_orange_dark"
         app:cardCornerRadius="5dp"
-        app:cardElevation="@dimen/cardview_elevation">
+        app:cardElevation="@dimen/cardview_elevation"
+        app:cardLightDirection="left">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="left"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/home_back" />
+    </com.meetsl.scardview.SCardView>
+
+    <com.meetsl.scardview.SCardView
+        android:layout_width="@dimen/card_size"
+        android:layout_height="@dimen/card_size"
+        android:layout_alignParentRight="true"
+        android:layout_margin="20dp"
+        app:cardBackgroundColor="@android:color/holo_red_light"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="@dimen/cardview_elevation"
+        app:cardLightDirection="right">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="right"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/home_back" />
+    </com.meetsl.scardview.SCardView>
+
+    <com.meetsl.scardview.SCardView
+        android:layout_width="@dimen/card_size"
+        android:layout_height="@dimen/card_size"
+        android:layout_centerVertical="true"
+        android:layout_margin="20dp"
+        app:cardBackgroundColor="#1ADB99"
+        app:cardShadowStartColor="#671ADB99"
+        app:cardShadowEndColor="#041ADB99"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="@dimen/cardview_elevation"
+        app:cardLightDirection="top">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="top"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -45,29 +118,20 @@
         android:layout_width="@dimen/card_size"
         android:layout_height="@dimen/card_size"
         android:layout_centerInParent="true"
-        app:cardBackgroundColor="@android:color/holo_blue_light"
+        android:layout_margin="20dp"
+        app:cardBackgroundColor="@color/colorPrimary"
         app:cardCornerRadius="5dp"
-        app:cardElevation="@dimen/cardview_elevation">
+        app:cardElevation="@dimen/cardview_elevation"
+        app:cardLightDirection="bottom">
 
-        <ImageView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:src="@mipmap/home_back" />
-    </com.meetsl.scardview.SCardView>
-
-
-    <com.meetsl.scardview.SCardView
-        android:layout_width="@dimen/card_size"
-        android:layout_height="@dimen/card_size"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="100dp"
-        android:layout_marginLeft="20dp"
-        app:cardBackgroundColor="#98ffffff"
-        app:cardLightDirection="NONE"
-        app:cardShadowStartColor="@color/colorAccent"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="@dimen/cardview_elevation">
+            android:layout_gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="bottom"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -80,11 +144,103 @@
         android:layout_width="@dimen/card_size"
         android:layout_height="@dimen/card_size"
         android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
         android:layout_margin="20dp"
-        android:onClick="jump"
-        app:cardBackgroundColor="@android:color/holo_blue_light"
+        app:cardBackgroundColor="@color/colorAccent"
+        app:cardShadowStartColor="#57FF4081"
+        app:cardShadowEndColor="#03FF4081"
         app:cardCornerRadius="5dp"
-        app:cardElevation="@dimen/cardview_elevation">
+        app:cardElevation="@dimen/cardview_elevation"
+        app:cardLightDirection="LT">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="LT"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/home_back" />
+    </com.meetsl.scardview.SCardView>
+
+    <com.meetsl.scardview.SCardView
+        android:layout_width="@dimen/card_size"
+        android:layout_height="@dimen/card_size"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20dp"
+        app:cardBackgroundColor="#85BC49"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="@dimen/cardview_elevation"
+        app:cardLightDirection="LB">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="LB"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/home_back" />
+    </com.meetsl.scardview.SCardView>
+
+    <com.meetsl.scardview.SCardView
+        android:layout_width="@dimen/card_size"
+        android:layout_height="@dimen/card_size"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="20dp"
+        app:cardBackgroundColor="#80B3FF"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="@dimen/cardview_elevation"
+        app:cardLightDirection="RT">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="RT"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@mipmap/home_back" />
+    </com.meetsl.scardview.SCardView>
+
+    <com.meetsl.scardview.SCardView
+        android:layout_width="@dimen/card_size"
+        android:layout_height="@dimen/card_size"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="20dp"
+        app:cardBackgroundColor="#40337D"
+        app:cardCornerRadius="5dp"
+        app:cardElevation="@dimen/cardview_elevation"
+        app:cardLightDirection="RB">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="5dp"
+            android:text="RB"
+            android:textColor="@android:color/white"
+            android:textSize="16sp" />
 
         <ImageView
             android:layout_width="wrap_content"
