@@ -254,8 +254,9 @@ class SCardView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : Fra
             val halfWidth = (right - left) / 2
             val halfHeight = (bottom - top) / 2
             val verticalMove = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) movePair.second else 0f
-            parentLeft = (halfWidth - rectF.width() / 2 + movePair.first).toInt()
-            parentRight = (halfWidth + rectF.width() / 2 + movePair.first).toInt()
+            val horizontalMove = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) movePair.first else 0f
+            parentLeft = (halfWidth - rectF.width() / 2 + horizontalMove).toInt()
+            parentRight = (halfWidth + rectF.width() / 2 + horizontalMove).toInt()
             parentTop = (halfHeight - rectF.height() / 2 + verticalMove).toInt()
             parentBottom = (halfHeight + rectF.height() / 2 + verticalMove).toInt()
         } else {

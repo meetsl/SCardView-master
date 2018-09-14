@@ -417,7 +417,12 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
     }
 
     fun getMoveDistance(): Pair<Float, Float>? {
-        return mTranslatePos?.second
+        mTranslatePos?.let {
+            val x = it.first.first + it.second.first
+            val y = it.first.second + it.second.second
+            return Pair(x, y)
+        }
+        return null
     }
 
     interface RoundRectHelper {
