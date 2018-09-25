@@ -14,15 +14,15 @@
         <attr name="contentPaddingTop" format="dimension" />
         <attr name="contentPaddingBottom" format="dimension" />
         <attr name="cardLightDirection">
-            <enum name="left" value="1" />
-            <enum name="right" value="2" />
-            <enum name="top" value="3" />
-            <enum name="bottom" value="4" />
-            <enum name="LT" value="5" />
-            <enum name="RT" value="6" />
-            <enum name="LB" value="7" />
-            <enum name="RB" value="8" />
-            <enum name="none" value="9" />
+            <enum name="left" value="1" /><!-- 设置光源位置为左侧，阴影在右侧 -->
+            <enum name="right" value="2" /><!-- 阴影在左侧-->
+            <enum name="top" value="3" /><!-- 阴影在下部-->
+            <enum name="bottom" value="4" /><!-- 阴影在上部 -->
+            <enum name="LT" value="5" /><!-- 阴影在右下角-->
+            <enum name="RT" value="6" /><!-- 阴影在左下角-->
+            <enum name="LB" value="7" /><!-- 阴影在右上角 -->
+            <enum name="RB" value="8" /><!-- 阴影在左上角 -->
+            <enum name="none" value="9" /><!-- 光源位置在正上方 -->
         </attr>
         <attr name="cardShadowStartColor" format="color" />
         <attr name="cardShadowEndColor" format="color" />
