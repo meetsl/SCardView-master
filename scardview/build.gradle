@@ -48,7 +48,7 @@ group = "io.github.meetsl"
 archivesBaseName = "SCardView"
 version = "1.0"
 
-uploadArchives {
+/*uploadArchives {
     repositories {
         mavenDeployer {
             beforeDeployment {
@@ -92,4 +92,4 @@ uploadArchives {
             }
         }
     }
-}
+}*/
