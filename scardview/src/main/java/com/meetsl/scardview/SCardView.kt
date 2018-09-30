@@ -21,22 +21,15 @@ class SCardView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : Fra
 
     private val COLOR_BACKGROUND_ATTR = intArrayOf(android.R.attr.colorBackground)
     private val DEFAULT_CHILD_GRAVITY = Gravity.TOP or Gravity.START
-    private var IMPL: SCardViewImpl = when {
-        Build.VERSION.SDK_INT >= 17 -> {
-            SCardViewApi17Impl()
-        }
-        else -> {
-            SCardViewBaseImpl()
-        }
-    }
-
-    init {
-        IMPL.initStatic()
-    }
+    private var IMPL: SCardViewImpl
 
     private var mCompatPadding: Boolean = false
 
     private var mPreventCornerOverlap: Boolean = false
+    /**
+     *  是否使用边角区域放置内容
+     */
+    private var mUseCornerArea: Boolean = false
 
     /**
      * CardView requires to have a particular minimum size to draw shadows before API 21. If
@@ -121,6 +114,7 @@ class SCardView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : Fra
         var maxElevation = a.getDimension(R.styleable.SCardView_cardMaxElevation, 0f)
         mCompatPadding = a.getBoolean(R.styleable.SCardView_cardUseCompatPadding, false)
         mPreventCornerOverlap = a.getBoolean(R.styleable.SCardView_cardPreventCornerOverlap, true)
+        mUseCornerArea = a.getBoolean(R.styleable.SCardView_cardUseCornerArea, false)
         val defaultPadding = a.getDimensionPixelSize(R.styleable.SCardView_contentPadding, 0)
         mContentPadding.left = a.getDimensionPixelSize(R.styleable.SCardView_contentPaddingLeft,
                 defaultPadding)
@@ -134,14 +128,28 @@ class SCardView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : Fra
             maxElevation = elevation
         }
         val direction = a.getInt(R.styleable.SCardView_cardLightDirection, DIRECTION_TOP)
+        val cardCornerVisibility = a.getInt(R.styleable.SCardView_cardCornerVisibility, NONE)
         val shadowStartColor = a.getColor(R.styleable.SCardView_cardShadowStartColor, -1)
         val shadowEndColor = a.getColor(R.styleable.SCardView_cardShadowEndColor, -1)
         mUserSetMinWidth = a.getDimensionPixelSize(R.styleable.SCardView_android_minWidth, 0)
         mUserSetMinHeight = a.getDimensionPixelSize(R.styleable.SCardView_android_minHeight, 0)
         a.recycle()
 
+        IMPL = when {
+            Build.VERSION.SDK_INT >= 17 -> {
+                if (cardCornerVisibility == NONE)
+                    SCardViewApi17Impl()
+                else
+                    SCardViewBaseImpl()
+            }
+            else -> {
+                SCardViewBaseImpl()
+            }
+        }
+        IMPL.initStatic()
+
         IMPL.initialize(mCardViewDelegate, context, backgroundColor, radius,
-                elevation, maxElevation, direction, shadowStartColor, shadowEndColor)
+                elevation, maxElevation, direction, cardCornerVisibility, shadowStartColor, shadowEndColor)
     }
 
 
@@ -246,10 +254,12 @@ class SCardView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : Fra
         val bg = IMPL.getShadowBackground(mCardViewDelegate) as SRoundRectDrawableWithShadow
         val rectF = bg.getCardRectSize()
         val movePair = bg.getMoveDistance()
-        val parentLeft: Int
-        val parentRight: Int
-        val parentTop: Int
-        val parentBottom: Int
+        val cornerRadius = bg.getCornerRadius()
+        val iex = (cornerRadius - (Math.sqrt(2.0) * cornerRadius) / 2 + 0.5f).toInt()
+        var parentLeft: Int
+        var parentRight: Int
+        var parentTop: Int
+        var parentBottom: Int
         if (movePair != null) {
             val halfWidth = (right - left) / 2
             val halfHeight = (bottom - top) / 2
@@ -259,6 +269,22 @@ class SCardView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : Fra
             parentRight = (halfWidth + rectF.width() / 2 + horizontalMove).toInt()
             parentTop = (halfHeight - rectF.height() / 2 + verticalMove).toInt()
             parentBottom = (halfHeight + rectF.height() / 2 + verticalMove).toInt()
+            //控制边角区域是否显示内容
+            if (!mUseCornerArea) {
+                parentLeft += iex
+                parentTop += iex
+                parentRight -= iex
+                parentBottom -= iex
+            }
+            //内容显示区域修正，防止内容显示不全
+            if (parentLeft < paddingLeft)
+                parentLeft = paddingLeft
+            if (parentRight > (right - left - paddingRight))
+                parentRight = right - left - paddingRight
+            if (parentTop < paddingTop)
+                parentTop = paddingTop
+            if (parentBottom > (bottom - top - paddingBottom))
+                parentBottom = bottom - top - paddingBottom
         } else {
             parentLeft = paddingLeft
             parentRight = right - left - paddingRight
@@ -308,8 +334,16 @@ class SCardView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : Fra
                     Gravity.BOTTOM -> parentBottom - height - lp.bottomMargin
                     else -> parentTop + lp.topMargin
                 }
-
-                child.layout(childLeft, childTop, childLeft + width, childTop + height)
+                var childRight = childLeft + width
+                var childBottom = childTop + height
+                //根据边角控制 修正 child 显示大小
+                if (!mUseCornerArea) {
+                    if (childRight > parentRight)
+                        childRight = parentRight
+                    if (childBottom > parentBottom)
+                        childBottom = parentBottom
+                }
+                child.layout(childLeft, childTop, childRight, childBottom)
             }
         }
     }

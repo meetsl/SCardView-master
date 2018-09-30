@@ -8,6 +8,7 @@
         <attr name="cardMaxElevation" format="dimension" />
         <attr name="cardUseCompatPadding" format="boolean" />
         <attr name="cardPreventCornerOverlap" format="boolean" />
+        <attr name="cardUseCornerArea" format="boolean" />
         <attr name="contentPadding" format="dimension" />
         <attr name="contentPaddingLeft" format="dimension" />
         <attr name="contentPaddingRight" format="dimension" />
@@ -23,6 +24,16 @@
             <enum name="LB" value="7" /><!-- 阴影在右上角 -->
             <enum name="RB" value="8" /><!-- 阴影在左上角 -->
             <enum name="none" value="9" /><!-- 光源位置在正上方 -->
+        </attr>
+
+        <attr name="cardCornerVisibility">
+            <enum name="noLeftCorner" value="1" />
+            <enum name="noRightCorner" value="2" />
+            <enum name="noTopCorner" value="3" />
+            <enum name="noBottomCorner" value="4" />
+            <enum name="noLT_RBCorner" value="5" />
+            <enum name="noRT_LBCorner" value="6" />
+            <enum name="none" value="7" />
         </attr>
         <attr name="cardShadowStartColor" format="color" />
         <attr name="cardShadowEndColor" format="color" />

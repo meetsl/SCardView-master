@@ -10,10 +10,7 @@
         android:layout_width="@dimen/card_size"
         android:layout_height="@dimen/card_size"
         android:layout_margin="20dp"
-        android:onClick="jump"
         app:cardBackgroundColor="@android:color/holo_blue_light"
-        app:cardShadowStartColor="#3733B5E5"
-        app:cardShadowEndColor="#0333B5E5"
         app:cardCornerRadius="5dp"
         app:cardElevation="@dimen/cardview_elevation"
         app:cardLightDirection="none">
@@ -92,11 +89,11 @@
         android:layout_centerVertical="true"
         android:layout_margin="20dp"
         app:cardBackgroundColor="#1ADB99"
-        app:cardShadowStartColor="#671ADB99"
-        app:cardShadowEndColor="#041ADB99"
         app:cardCornerRadius="5dp"
         app:cardElevation="@dimen/cardview_elevation"
-        app:cardLightDirection="top">
+        app:cardLightDirection="top"
+        app:cardShadowEndColor="#041ADB99"
+        app:cardShadowStartColor="#671ADB99">
 
         <TextView
             android:layout_width="wrap_content"
@@ -147,11 +144,12 @@
         android:layout_centerVertical="true"
         android:layout_margin="20dp"
         app:cardBackgroundColor="@color/colorAccent"
-        app:cardShadowStartColor="#57FF4081"
-        app:cardShadowEndColor="#03FF4081"
         app:cardCornerRadius="5dp"
+        app:cardCornerVisibility="noTopCorner"
         app:cardElevation="@dimen/cardview_elevation"
-        app:cardLightDirection="LT">
+        app:cardLightDirection="LT"
+        app:cardShadowEndColor="#03FF4081"
+        app:cardShadowStartColor="#57FF4081">
 
         <TextView
             android:layout_width="wrap_content"

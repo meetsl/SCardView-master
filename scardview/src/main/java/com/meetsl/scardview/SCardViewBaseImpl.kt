@@ -17,7 +17,7 @@ open class SCardViewBaseImpl : SCardViewImpl {
         // canvas.drawRoundRect before JBMR1 because API 11-16 used alpha mask textures to draw
         // shapes.
         SRoundRectDrawableWithShadow.sRoundRectHelper = object : SRoundRectDrawableWithShadow.RoundRectHelper {
-            override fun drawRoundRect(canvas: Canvas, bounds: RectF, cornerRadius: Float, paint: Paint) {
+            override fun drawRoundRect(canvas: Canvas, bounds: RectF, cornerRadius: Float, cornerVisibility: Int, paint: Paint) {
                 val twoRadius = cornerRadius * 2
                 val innerWidth = bounds.width() - twoRadius - 1f
                 val innerHeight = bounds.height() - twoRadius - 1f
@@ -29,17 +29,30 @@ open class SCardViewBaseImpl : SCardViewImpl {
                     val saved = canvas.save()
                     canvas.translate(bounds.left + roundedCornerRadius,
                             bounds.top + roundedCornerRadius)
-                    canvas.drawArc(mCornerRect, 180f, 90f, true, paint)
+                    if (cornerVisibility == NOLEFTCORNER || cornerVisibility == NOTOPCORNER || cornerVisibility == NOLT_RBCORNER)
+                        canvas.drawRect(-roundedCornerRadius, -roundedCornerRadius, 0f, 0f, paint)
+                    else
+                        canvas.drawArc(mCornerRect, 180f, 90f, true, paint)
                     canvas.translate(innerWidth, 0f)
                     canvas.rotate(90f)
-                    canvas.drawArc(mCornerRect, 180f, 90f, true, paint)
+                    if (cornerVisibility == NORIGHTCORNER || cornerVisibility == NOTOPCORNER || cornerVisibility == NORT_LBCORNER)
+                        canvas.drawRect(-roundedCornerRadius, -roundedCornerRadius, 0f, 0f, paint)
+                    else
+                        canvas.drawArc(mCornerRect, 180f, 90f, true, paint)
                     canvas.translate(innerHeight, 0f)
                     canvas.rotate(90f)
-                    canvas.drawArc(mCornerRect, 180f, 90f, true, paint)
+                    if (cornerVisibility == NORIGHTCORNER || cornerVisibility == NOBOTTOMCORNER || cornerVisibility == NOLT_RBCORNER)
+                        canvas.drawRect(-roundedCornerRadius, -roundedCornerRadius, 0f, 0f, paint)
+                    else
+                        canvas.drawArc(mCornerRect, 180f, 90f, true, paint)
                     canvas.translate(innerWidth, 0f)
                     canvas.rotate(90f)
-                    canvas.drawArc(mCornerRect, 180f, 90f, true, paint)
+                    if (cornerVisibility == NOLEFTCORNER || cornerVisibility == NOBOTTOMCORNER || cornerVisibility == NORT_LBCORNER)
+                        canvas.drawRect(-roundedCornerRadius, -roundedCornerRadius, 0f, 0f, paint)
+                    else
+                        canvas.drawArc(mCornerRect, 180f, 90f, true, paint)
                     canvas.restoreToCount(saved)
+
                     //draw top and bottom pieces
                     canvas.drawRect(bounds.left + roundedCornerRadius - 1f, bounds.top,
                             bounds.right - roundedCornerRadius + 1f,
@@ -59,9 +72,9 @@ open class SCardViewBaseImpl : SCardViewImpl {
 
     override fun initialize(cardView: SCardViewDelegate, context: Context,
                             backgroundColor: ColorStateList, radius: Float, elevation: Float,
-                            maxElevation: Float, direction: Int, startColor: Int, endColor: Int) {
-        val background = createBackground(cardView,context, backgroundColor, radius,
-                elevation, maxElevation, direction, startColor, endColor)
+                            maxElevation: Float, direction: Int, cornerVisibility: Int, startColor: Int, endColor: Int) {
+        val background = createBackground(cardView, context, backgroundColor, radius,
+                elevation, maxElevation, direction, cornerVisibility, startColor, endColor)
         background.setAddPaddingForCorners(cardView.preventCornerOverlap)
         cardView.cardBackground = background
         updatePadding(cardView)
@@ -69,10 +82,10 @@ open class SCardViewBaseImpl : SCardViewImpl {
 
     private fun createBackground(cardViewDelegate: SCardViewDelegate, context: Context,
                                  backgroundColor: ColorStateList, radius: Float, elevation: Float,
-                                 maxElevation: Float, direction: Int, startColor: Int,
+                                 maxElevation: Float, direction: Int, cornerVisibility: Int, startColor: Int,
                                  endColor: Int): SRoundRectDrawableWithShadow {
-        return SRoundRectDrawableWithShadow(cardViewDelegate,context.resources, backgroundColor, radius,
-                elevation, maxElevation, direction, startColor, endColor)
+        return SRoundRectDrawableWithShadow(cardViewDelegate, context.resources, backgroundColor, radius,
+                elevation, maxElevation, direction, cornerVisibility, startColor, endColor)
     }
 
     override fun updatePadding(cardView: SCardViewDelegate) {

@@ -9,7 +9,7 @@ import android.graphics.drawable.Drawable
  * Created by shilong
  *  2018/9/11.
  */
-class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resources: Resources, backgroundColor: ColorStateList, radius: Float, shadowSize: Float, maxShadowSize: Float, direction: Int, startColor: Int, endColor: Int) : Drawable() {
+class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resources: Resources, backgroundColor: ColorStateList, radius: Float, shadowSize: Float, maxShadowSize: Float, direction: Int, cornerVisibility: Int, startColor: Int, endColor: Int) : Drawable() {
     private var mInsetShadow: Int = 0 // extra shadow to avoid gaps between card and shadow
     /*
     * This helper is set by CardView implementations.
@@ -50,6 +50,8 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
 
     private var mLightDirection: Int = DIRECTION_TOP
 
+    private var mCornerVisibility: Int = NONE
+
     private var mCardDelegate: SCardViewDelegate
 
     init {
@@ -65,6 +67,7 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
         mEdgeShadowPaint = Paint(mCornerShadowPaint)
         mEdgeShadowPaint.isAntiAlias = false
         mLightDirection = direction
+        mCornerVisibility = cornerVisibility;
         mCardDelegate = cardViewDelegate
         setShadowSize(shadowSize, maxShadowSize)
     }
@@ -214,7 +217,7 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
             canvas.translate(it.first.first, it.first.second)
             drawShadow(canvas)
             canvas.translate(it.second.first, it.second.second)
-            sRoundRectHelper?.drawRoundRect(canvas, mCardBounds, mCornerRadius, mPaint)
+            sRoundRectHelper?.drawRoundRect(canvas, mCardBounds, mCornerRadius, mCornerVisibility, mPaint)
             if (isFirst) {
                 mCardDelegate.cardView.requestLayout()
                 isFirst = false
@@ -281,51 +284,116 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
     }
 
     private fun drawShadow(canvas: Canvas) {
-        val edgeShadowTop = -mCornerRadius - mShadowSize
-        val inset = mCornerRadius + mInsetShadow.toFloat() + mRawShadowSize / 2
-        val drawHorizontalEdges = mCardBounds.width() - 2 * inset > 0
-        val drawVerticalEdges = mCardBounds.height() - 2 * inset > 0
+        val visibility = calculateCornerVisibility() //顺时针 - 可见性
         // LT
         var saved = canvas.save()
-        canvas.translate(mCardBounds.left + inset, mCardBounds.top + inset)
-        canvas.drawPath(mCornerShadowPath!!, mCornerShadowPaint)
-        if (drawHorizontalEdges) {
-            canvas.drawRect(0f, edgeShadowTop, mCardBounds.width() - 2 * inset, -mCornerRadius, mEdgeShadowPaint)
-        }
+        drawLTCorner(canvas, visibility.left)
         canvas.restoreToCount(saved)
         // RB
         saved = canvas.save()
-        canvas.translate(mCardBounds.right - inset, mCardBounds.bottom - inset)
-        canvas.rotate(180f)
-        canvas.drawPath(mCornerShadowPath!!, mCornerShadowPaint)
-        if (drawHorizontalEdges) {
-            canvas.drawRect(0f, edgeShadowTop, mCardBounds.width() - 2 * inset, -mCornerRadius, mEdgeShadowPaint)
-        }
+        drawRBCorner(canvas, visibility.right)
         canvas.restoreToCount(saved)
         // LB
         saved = canvas.save()
-        canvas.translate(mCardBounds.left + inset, mCardBounds.bottom - inset)
-        canvas.rotate(270f)
-        canvas.drawPath(mCornerShadowPath!!, mCornerShadowPaint)
-        if (drawVerticalEdges) {
-            canvas.drawRect(0f, edgeShadowTop,
-                    mCardBounds.height() - 2 * inset, -mCornerRadius, mEdgeShadowPaint)
-        }
+        drawLBCorner(canvas, visibility.bottom)
         canvas.restoreToCount(saved)
         // RT
         saved = canvas.save()
+        drawRTCorner(canvas, visibility.top)
+        canvas.restoreToCount(saved)
+    }
+
+    private fun calculateCornerVisibility(): RectF {
+        return when (mCornerVisibility) {
+            NOLEFTCORNER -> RectF(0f, mCornerRadius, mCornerRadius, 0f)
+            NORIGHTCORNER -> RectF(mCornerRadius, 0f, 0f, mCornerRadius)
+            NOTOPCORNER -> RectF(0f, 0f, mCornerRadius, mCornerRadius)
+            NOBOTTOMCORNER -> RectF(mCornerRadius, mCornerRadius, 0f, 0f)
+            NOLT_RBCORNER -> RectF(0f, mCornerRadius, 0f, mCornerRadius)
+            NORT_LBCORNER -> RectF(mCornerRadius, 0f, mCornerRadius, 0f)
+            else -> RectF(mCornerRadius, mCornerRadius, mCornerRadius, mCornerRadius)
+        }
+    }
+
+    private fun drawRTCorner(canvas: Canvas, cornerRadius: Float) {
+        val edgeShadowTop = -cornerRadius - mShadowSize
+        val inset = cornerRadius + mInsetShadow.toFloat() + mRawShadowSize / 2
+        var right = mCardBounds.height() - 2 * inset
+        val drawVerticalEdges = right > 0
+        buildShadowCorners(cornerRadius)
         canvas.translate(mCardBounds.right - inset, mCardBounds.top + inset)
         canvas.rotate(90f)
         canvas.drawPath(mCornerShadowPath!!, mCornerShadowPaint)
         if (drawVerticalEdges) {
-            canvas.drawRect(0f, edgeShadowTop,
-                    mCardBounds.height() - 2 * inset, -mCornerRadius, mEdgeShadowPaint)
+            if (mCornerVisibility == NOTOPCORNER || mCornerVisibility == NORT_LBCORNER) {
+                right -= mCornerRadius
+            }
+            if (mCornerVisibility == NOBOTTOMCORNER || mCornerVisibility == NOLT_RBCORNER) {
+                right += mCornerRadius
+            }
+            canvas.drawRect(0f, edgeShadowTop, right, -cornerRadius, mEdgeShadowPaint)
         }
-        canvas.restoreToCount(saved)
     }
 
-    private fun buildShadowCorners() {
-        val innerBounds = RectF(-mCornerRadius, -mCornerRadius, mCornerRadius, mCornerRadius)
+    private fun drawRBCorner(canvas: Canvas, cornerRadius: Float) {
+        val edgeShadowTop = -cornerRadius - mShadowSize
+        val inset = cornerRadius + mInsetShadow.toFloat() + mRawShadowSize / 2
+        val drawHorizontalEdges = mCardBounds.width() - 2 * inset > 0
+
+        buildShadowCorners(cornerRadius)
+        canvas.translate(mCardBounds.right - inset, mCardBounds.bottom - inset)
+        canvas.rotate(180f)
+        canvas.drawPath(mCornerShadowPath!!, mCornerShadowPaint)
+        if (drawHorizontalEdges) {
+            var right = mCardBounds.width() - 2 * inset
+            if (mCornerVisibility == NOLEFTCORNER || mCornerVisibility == NORT_LBCORNER)
+                right += mCornerRadius
+            if (mCornerVisibility == NORIGHTCORNER || mCornerVisibility == NOLT_RBCORNER)
+                right -= mCornerRadius
+            canvas.drawRect(0f, edgeShadowTop, right, -cornerRadius, mEdgeShadowPaint)
+        }
+    }
+
+    private fun drawLBCorner(canvas: Canvas, cornerRadius: Float) {
+        buildShadowCorners(cornerRadius)
+        val edgeShadowTop = -cornerRadius - mShadowSize
+        val inset = cornerRadius + mInsetShadow.toFloat() + mRawShadowSize / 2
+        var right = mCardBounds.height() - 2 * inset
+        val drawVerticalEdges = right > 0
+        canvas.translate(mCardBounds.left + inset, mCardBounds.bottom - inset)
+        canvas.rotate(270f)
+        canvas.drawPath(mCornerShadowPath!!, mCornerShadowPaint)
+        if (drawVerticalEdges) {
+            if (mCornerVisibility == NOTOPCORNER || mCornerVisibility == NOLT_RBCORNER) {
+                right += mCornerRadius
+            }
+            if (mCornerVisibility == NOBOTTOMCORNER || mCornerVisibility == NORT_LBCORNER) {
+                right -= mCornerRadius
+            }
+            canvas.drawRect(0f, edgeShadowTop, right, -cornerRadius, mEdgeShadowPaint)
+        }
+    }
+
+    private fun drawLTCorner(canvas: Canvas, cornerRadius: Float) {
+        val edgeShadowTop = -cornerRadius - mShadowSize
+        val inset = cornerRadius + mInsetShadow.toFloat() + mRawShadowSize / 2
+        val drawHorizontalEdges = mCardBounds.width() - 2 * inset > 0
+        buildShadowCorners(cornerRadius)
+
+        canvas.translate(mCardBounds.left + inset, mCardBounds.top + inset)
+        canvas.drawPath(mCornerShadowPath!!, mCornerShadowPaint)
+        if (drawHorizontalEdges) {
+            var right = mCardBounds.width() - 2 * inset
+            if (mCornerVisibility == NORIGHTCORNER || mCornerVisibility == NORT_LBCORNER)
+                right += mCornerRadius
+            if (mCornerVisibility == NOLEFTCORNER || mCornerVisibility == NOLT_RBCORNER)
+                right -= mCornerRadius
+            canvas.drawRect(0f, edgeShadowTop, right, -cornerRadius, mEdgeShadowPaint)
+        }
+    }
+
+    private fun buildShadowCorners(cornerRadius: Float) {
+        val innerBounds = RectF(-cornerRadius, -cornerRadius, cornerRadius, cornerRadius)
         val outerBounds = RectF(innerBounds)
         outerBounds.inset(-mShadowSize, -mShadowSize)
 
@@ -335,15 +403,15 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
             mCornerShadowPath!!.reset()
         }
         mCornerShadowPath!!.fillType = Path.FillType.EVEN_ODD
-        mCornerShadowPath!!.moveTo(-mCornerRadius, 0f)
+        mCornerShadowPath!!.moveTo(-cornerRadius, 0f)
         mCornerShadowPath!!.rLineTo(-mShadowSize, 0f)
         // outer arc
         mCornerShadowPath!!.arcTo(outerBounds, 180f, 90f, false)
         // inner arc
         mCornerShadowPath!!.arcTo(innerBounds, 270f, -90f, false)
         mCornerShadowPath!!.close()
-        val startRatio = mCornerRadius / (mCornerRadius + mShadowSize)
-        mCornerShadowPaint.shader = RadialGradient(0f, 0f, mCornerRadius + mShadowSize,
+        val startRatio = cornerRadius / (cornerRadius + mShadowSize)
+        mCornerShadowPaint.shader = RadialGradient(0f, 0f, cornerRadius + mShadowSize,
                 intArrayOf(mShadowStartColor, mShadowStartColor, mShadowEndColor),
                 floatArrayOf(0f, startRatio, 1f),
                 Shader.TileMode.CLAMP)
@@ -351,8 +419,8 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
         // we offset the content shadowSize/2 pixels up to make it more realistic.
         // this is why edge shadow shader has some extra space
         // When drawing bottom edge shadow, we use that extra space.
-        mEdgeShadowPaint.shader = LinearGradient(0f, -mCornerRadius + mShadowSize, 0f,
-                -mCornerRadius - mShadowSize,
+        mEdgeShadowPaint.shader = LinearGradient(0f, -cornerRadius + mShadowSize, 0f,
+                -cornerRadius - mShadowSize,
                 intArrayOf(mShadowStartColor, mShadowStartColor, mShadowEndColor),
                 floatArrayOf(0f, .5f, 1f), Shader.TileMode.CLAMP)
         mEdgeShadowPaint.isAntiAlias = false
@@ -365,7 +433,7 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
         val verticalOffset = mRawMaxShadowSize * SHADOW_MULTIPLIER
         mCardBounds.set(bounds.left + mRawMaxShadowSize, bounds.top + verticalOffset,
                 bounds.right - mRawMaxShadowSize, bounds.bottom - verticalOffset)
-        buildShadowCorners()
+        buildShadowCorners(mCornerRadius)
     }
 
     fun getCornerRadius(): Float {
@@ -426,6 +494,6 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
     }
 
     interface RoundRectHelper {
-        fun drawRoundRect(canvas: Canvas, bounds: RectF, cornerRadius: Float, paint: Paint)
+        fun drawRoundRect(canvas: Canvas, bounds: RectF, cornerRadius: Float, cornerVisibility: Int, paint: Paint)
     }
 }

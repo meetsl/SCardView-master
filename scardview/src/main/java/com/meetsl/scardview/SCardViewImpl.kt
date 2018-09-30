@@ -7,7 +7,7 @@ import android.graphics.drawable.Drawable
 
 internal interface SCardViewImpl {
     fun initialize(cardView: SCardViewDelegate, context: Context, backgroundColor: ColorStateList,
-                   radius: Float, elevation: Float, maxElevation: Float, direction: Int, startColor: Int = -1, endColor: Int = -1)
+                   radius: Float, elevation: Float, maxElevation: Float, direction: Int, cornerVisibility: Int, startColor: Int = -1, endColor: Int = -1)
 
     fun setRadius(cardView: SCardViewDelegate, radius: Float)
 

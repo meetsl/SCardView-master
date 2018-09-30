@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="cardview_elevation">8dp</dimen>
+    <dimen name="card_corner_visible_elevation">5dp</dimen>
     <dimen name="card_size">150dp</dimen>
+    <dimen name="card_corner_visible_size">100dp</dimen>
+    <dimen name="card_corner_visible_margin">10dp</dimen>
+    <dimen name="card_corner_visible_text_size">11sp</dimen>
+    <dimen name="card_corner_visible_radius">10sp</dimen>
 </resources>
