@@ -46,9 +46,9 @@ signing {
 
 group = "io.github.meetsl"
 archivesBaseName = "SCardView"
-version = "1.0"
+version = "1.1"
 
-/*uploadArchives {
+uploadArchives {
     repositories {
         mavenDeployer {
             beforeDeployment {
@@ -92,4 +92,4 @@ version = "1.0"
             }
         }
     }
-}*/
+}
