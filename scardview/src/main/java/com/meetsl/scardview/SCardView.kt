@@ -11,6 +11,8 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
+import kotlin.math.ceil
+import kotlin.math.sqrt
 
 
 /**
@@ -219,30 +221,28 @@ class SCardView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : Fra
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        var widthMeasureSpec = widthMeasureSpec
-        var heightMeasureSpec = heightMeasureSpec
-        val widthMode = View.MeasureSpec.getMode(widthMeasureSpec)
-        when (widthMode) {
-            View.MeasureSpec.EXACTLY, View.MeasureSpec.AT_MOST -> {
-                val minWidth = Math.ceil(IMPL.getMinWidth(mCardViewDelegate).toDouble()).toInt()
-                widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(Math.max(minWidth,
-                        View.MeasureSpec.getSize(widthMeasureSpec)), widthMode)
+        var updateWidthMeasureSpec = widthMeasureSpec
+        var updateHeightMeasureSpec = heightMeasureSpec
+        when (val widthMode = MeasureSpec.getMode(widthMeasureSpec)) {
+            MeasureSpec.EXACTLY, MeasureSpec.AT_MOST -> {
+                val minWidth = ceil(IMPL.getMinWidth(mCardViewDelegate).toDouble()).toInt()
+                updateWidthMeasureSpec = MeasureSpec.makeMeasureSpec(minWidth.coerceAtLeast(MeasureSpec.getSize(widthMeasureSpec)), widthMode)
             }
-            View.MeasureSpec.UNSPECIFIED -> {
+            MeasureSpec.UNSPECIFIED -> {
+                // Do nothing
             }
-        }// Do nothing
+        }
 
-        val heightMode = View.MeasureSpec.getMode(heightMeasureSpec)
-        when (heightMode) {
-            View.MeasureSpec.EXACTLY, View.MeasureSpec.AT_MOST -> {
-                val minHeight = Math.ceil(IMPL.getMinHeight(mCardViewDelegate).toDouble()).toInt()
-                heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(Math.max(minHeight,
-                        View.MeasureSpec.getSize(heightMeasureSpec)), heightMode)
+        when (val heightMode = MeasureSpec.getMode(heightMeasureSpec)) {
+            MeasureSpec.EXACTLY, MeasureSpec.AT_MOST -> {
+                val minHeight = ceil(IMPL.getMinHeight(mCardViewDelegate).toDouble()).toInt()
+                updateHeightMeasureSpec = MeasureSpec.makeMeasureSpec(minHeight.coerceAtLeast(MeasureSpec.getSize(heightMeasureSpec)), heightMode)
             }
-            View.MeasureSpec.UNSPECIFIED -> {
+            MeasureSpec.UNSPECIFIED -> {
+                // Do nothing
             }
-        }// Do nothing
-        super.onMeasure(widthMeasureSpec, heightMeasureSpec)
+        }
+        super.onMeasure(updateWidthMeasureSpec, updateHeightMeasureSpec)
     }
 
     override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
@@ -255,7 +255,7 @@ class SCardView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : Fra
         val rectF = bg.getCardRectSize()
         val movePair = bg.getMoveDistance()
         val cornerRadius = bg.getCornerRadius()
-        val iex = (cornerRadius - (Math.sqrt(2.0) * cornerRadius) / 2 + 0.5f).toInt()
+        val iex = (cornerRadius - (sqrt(2.0) * cornerRadius) / 2 + 0.5f).toInt()
         var parentLeft: Int
         var parentRight: Int
         var parentTop: Int
@@ -297,37 +297,35 @@ class SCardView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : Fra
             val child = getChildAt(i)
             if (child.visibility != View.GONE) {
                 val lp = child.layoutParams as LayoutParams
-
                 val width = child.measuredWidth
                 val height = child.measuredHeight
-
-                val childLeft: Int
-                val childTop: Int
-
                 var gravity = lp.gravity
                 if (gravity == -1) {
                     gravity = DEFAULT_CHILD_GRAVITY
                 }
-
                 val layoutDirection = layoutDirection //Please ignore this warning , this code work well under the Android 17
                 val absoluteGravity = Gravity.getAbsoluteGravity(gravity, layoutDirection)
+                val horizontalGravity = absoluteGravity and Gravity.HORIZONTAL_GRAVITY_MASK
                 val verticalGravity = gravity and Gravity.VERTICAL_GRAVITY_MASK
-
-                childLeft = when (absoluteGravity and Gravity.HORIZONTAL_GRAVITY_MASK) {
-                    Gravity.CENTER_HORIZONTAL -> parentLeft + (parentRight - parentLeft - width) / 2 +
-                            lp.leftMargin - lp.rightMargin
-                    Gravity.END -> {
+                val childLeft = when (horizontalGravity) {
+                    Gravity.CENTER_HORIZONTAL -> {
+                        parentLeft + (parentRight - parentLeft - width) / 2 + lp.leftMargin - lp.rightMargin
+                    }
+                    Gravity.RIGHT -> {
                         if (!forceLeftGravity) {
                             parentRight - width - lp.rightMargin
                         } else {
                             parentLeft + lp.leftMargin
                         }
                     }
-                    Gravity.START -> parentLeft + lp.leftMargin
-                    else -> parentLeft + lp.leftMargin
+                    Gravity.LEFT -> {
+                        parentLeft + lp.leftMargin
+                    }
+                    else -> {
+                        parentLeft + lp.leftMargin
+                    }
                 }
-
-                childTop = when (verticalGravity) {
+                val childTop = when (verticalGravity) {
                     Gravity.TOP -> parentTop + lp.topMargin
                     Gravity.CENTER_VERTICAL -> parentTop + (parentBottom - parentTop - height) / 2 +
                             lp.topMargin - lp.bottomMargin
@@ -376,6 +374,23 @@ class SCardView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : Fra
      */
     fun setCardBackgroundColor(color: ColorStateList?) {
         IMPL.setBackgroundColor(mCardViewDelegate, color)
+    }
+
+    /**
+     * Updates the shadow color of the CardView
+     *
+     * @param startColor The new startColor to set for the card shadow
+     * @param endColor The new endColor to set for the card shadow
+     */
+    fun setCardShadowColor(@ColorInt startColor: Int, @ColorInt endColor: Int) {
+        IMPL.setShadowColor(mCardViewDelegate, startColor, endColor)
+    }
+
+    /**
+     * update the both of background color and shadow color of the card view
+     */
+    fun setColors(@ColorInt backgroundColor: Int, @ColorInt shadowStartColor: Int, @ColorInt shadowEndColor: Int) {
+        IMPL.setColors(mCardViewDelegate, backgroundColor, shadowStartColor, shadowEndColor)
     }
 
     /**

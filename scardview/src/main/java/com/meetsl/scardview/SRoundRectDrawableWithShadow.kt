@@ -4,6 +4,7 @@ import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.*
 import android.graphics.drawable.Drawable
+import kotlin.math.ceil
 
 /**
  * Created by shilong
@@ -67,7 +68,7 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
         mEdgeShadowPaint = Paint(mCornerShadowPaint)
         mEdgeShadowPaint.isAntiAlias = false
         mLightDirection = direction
-        mCornerVisibility = cornerVisibility;
+        mCornerVisibility = cornerVisibility
         mCardDelegate = cardViewDelegate
         setShadowSize(shadowSize, maxShadowSize)
     }
@@ -133,9 +134,9 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
     }
 
     override fun getPadding(padding: Rect): Boolean {
-        val vOffset = Math.ceil(calculateVerticalPadding(mRawMaxShadowSize, mCornerRadius,
+        val vOffset = ceil(calculateVerticalPadding(mRawMaxShadowSize, mCornerRadius,
                 mAddPaddingForCorners).toDouble()).toInt()
-        val hOffset = Math.ceil(calculateHorizontalPadding(mRawMaxShadowSize, mCornerRadius,
+        val hOffset = ceil(calculateHorizontalPadding(mRawMaxShadowSize, mCornerRadius,
                 mAddPaddingForCorners).toDouble()).toInt()
         padding.set(hOffset, vOffset, hOffset, vOffset)
         return true
@@ -491,6 +492,20 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
             return Pair(x, y)
         }
         return null
+    }
+
+    fun setShadowColor(startColor: Int, endColor: Int) {
+        mShadowStartColor = startColor
+        mShadowEndColor = endColor
+        invalidateSelf()
+    }
+
+    fun setColors(backgroundColor: Int, shadowStartColor: Int, shadowEndColor: Int) {
+        mBackground = ColorStateList.valueOf(backgroundColor)
+        mPaint.color = mBackground!!.getColorForState(state, mBackground!!.defaultColor)
+        mShadowStartColor = shadowStartColor
+        mShadowEndColor = shadowEndColor
+        invalidateSelf()
     }
 
     interface RoundRectHelper {

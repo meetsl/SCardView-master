@@ -3,6 +3,7 @@ package com.meetsl.scardview
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
+import androidx.annotation.ColorInt
 
 
 internal interface SCardViewImpl {
@@ -35,7 +36,10 @@ internal interface SCardViewImpl {
 
     fun setBackgroundColor(cardView: SCardViewDelegate, color: ColorStateList?)
 
+    fun setShadowColor(cardView: SCardViewDelegate, @ColorInt startColor: Int, @ColorInt endColor: Int)
+
     fun getBackgroundColor(cardView: SCardViewDelegate): ColorStateList
 
     fun getShadowBackground(cardView: SCardViewDelegate): Drawable
+    fun setColors(cardView: SCardViewDelegate, backgroundColor: Int, shadowStartColor: Int, shadowEndColor: Int)
 }

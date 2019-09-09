@@ -110,6 +110,14 @@ open class SCardViewBaseImpl : SCardViewImpl {
         getShadowBackground(cardView).setColor(color)
     }
 
+    override fun setShadowColor(cardView: SCardViewDelegate, startColor: Int, endColor: Int) {
+        getShadowBackground(cardView).setShadowColor(startColor, endColor)
+    }
+
+    override fun setColors(cardView: SCardViewDelegate, backgroundColor: Int, shadowStartColor: Int, shadowEndColor: Int) {
+        getShadowBackground(cardView).setColors(backgroundColor, shadowStartColor, shadowEndColor)
+    }
+
     override fun getBackgroundColor(cardView: SCardViewDelegate): ColorStateList {
         return getShadowBackground(cardView).getColor()!!
     }
