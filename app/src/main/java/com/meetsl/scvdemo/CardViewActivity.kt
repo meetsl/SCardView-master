@@ -1,6 +1,6 @@
 package com.meetsl.scvdemo
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
 class CardViewActivity : AppCompatActivity() {

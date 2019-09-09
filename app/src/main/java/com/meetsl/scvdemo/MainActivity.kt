@@ -1,9 +1,7 @@
 package com.meetsl.scvdemo
 
-import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
-import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
 

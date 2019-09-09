@@ -4,12 +4,13 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 
 /**
- * Created by shilong
- *  2018/9/30.
+ * @author : ShiLong
+ * date: 2019/9/8.
  */
-class CornerVisibilityActivity : AppCompatActivity() {
+class RecyclerViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_corner_visibility)
+        setContentView(R.layout.activity_recyclerview)
+
     }
 }
