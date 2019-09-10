@@ -3,6 +3,7 @@ package com.meetsl.scvdemo
 import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.meetsl.scardview.SCardView
 
@@ -32,5 +33,6 @@ class RVAdapter(private val list: List<Int>) : RecyclerView.Adapter<RecyclerView
 
         //update backgroundColor shadowStartColor shadowEndColor
         holder.itemView.findViewById<SCardView>(R.id.card_item_view).setColors(backgroundColor, shadowStartColor, shadowEndColor)
+        holder.itemView.findViewById<TextView>(R.id.tv_content).text = "Nice to meet you ! $position"
     }
 }

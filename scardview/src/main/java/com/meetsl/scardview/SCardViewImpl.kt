@@ -41,5 +41,6 @@ internal interface SCardViewImpl {
     fun getBackgroundColor(cardView: SCardViewDelegate): ColorStateList
 
     fun getShadowBackground(cardView: SCardViewDelegate): Drawable
+
     fun setColors(cardView: SCardViewDelegate, backgroundColor: Int, shadowStartColor: Int, shadowEndColor: Int)
 }

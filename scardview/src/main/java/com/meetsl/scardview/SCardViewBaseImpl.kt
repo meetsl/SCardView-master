@@ -24,8 +24,7 @@ open class SCardViewBaseImpl : SCardViewImpl {
                 if (cornerRadius >= 1f) {
                     // increment corner radius to account for half pixels.
                     val roundedCornerRadius = cornerRadius + .5f
-                    mCornerRect.set(-roundedCornerRadius, -roundedCornerRadius, roundedCornerRadius,
-                            roundedCornerRadius)
+                    mCornerRect.set(-roundedCornerRadius, -roundedCornerRadius, roundedCornerRadius, roundedCornerRadius)
                     val saved = canvas.save()
                     canvas.translate(bounds.left + roundedCornerRadius,
                             bounds.top + roundedCornerRadius)

@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.graphics.*
 import android.graphics.drawable.Drawable
 import kotlin.math.ceil
+import kotlin.math.cos
 
 /**
  * Created by shilong
@@ -105,30 +106,30 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
     }
 
     private fun setShadowSize(shadowSize: Float, maxShadowSize: Float) {
-        var shadowSize = shadowSize
-        var maxShadowSize = maxShadowSize
-        if (shadowSize < 0f) {
-            throw IllegalArgumentException("Invalid shadow size " + shadowSize
+        var updateShadowSize = shadowSize
+        var updateMaxShadowSize = maxShadowSize
+        if (updateShadowSize < 0f) {
+            throw IllegalArgumentException("Invalid shadow size " + updateShadowSize
                     + ". Must be >= 0")
         }
-        if (maxShadowSize < 0f) {
-            throw IllegalArgumentException("Invalid max shadow size " + maxShadowSize
+        if (updateMaxShadowSize < 0f) {
+            throw IllegalArgumentException("Invalid max shadow size " + updateMaxShadowSize
                     + ". Must be >= 0")
         }
-        shadowSize = toEven(shadowSize).toFloat()
-        maxShadowSize = toEven(maxShadowSize).toFloat()
-        if (shadowSize > maxShadowSize) {
-            shadowSize = maxShadowSize
+        updateShadowSize = toEven(updateShadowSize).toFloat()
+        updateMaxShadowSize = toEven(updateMaxShadowSize).toFloat()
+        if (updateShadowSize > updateMaxShadowSize) {
+            updateShadowSize = updateMaxShadowSize
             if (!mPrintedShadowClipWarning) {
                 mPrintedShadowClipWarning = true
             }
         }
-        if (mRawShadowSize == shadowSize && mRawMaxShadowSize == maxShadowSize) {
+        if (mRawShadowSize == updateShadowSize && mRawMaxShadowSize == updateMaxShadowSize) {
             return
         }
-        mRawShadowSize = shadowSize
-        mRawMaxShadowSize = maxShadowSize
-        mShadowSize = (shadowSize * SHADOW_MULTIPLIER + mInsetShadow.toFloat() + .5f).toInt().toFloat()
+        mRawShadowSize = updateShadowSize
+        mRawMaxShadowSize = updateMaxShadowSize
+        mShadowSize = (updateShadowSize * SHADOW_MULTIPLIER + mInsetShadow.toFloat() + .5f).toInt().toFloat()
         mDirty = true
         invalidateSelf()
     }
@@ -144,7 +145,7 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
 
     companion object {
         // used to calculate content padding
-        private val COS_45 = Math.cos(Math.toRadians(45.0))
+        private val COS_45 = cos(Math.toRadians(45.0))
         var sRoundRectHelper: RoundRectHelper? = null
         const val SHADOW_MULTIPLIER = 1.5f
 
@@ -192,20 +193,20 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
     }
 
     fun setCornerRadius(radius: Float) {
-        var radius = radius
-        if (radius < 0f) {
-            throw IllegalArgumentException("Invalid radius $radius. Must be >= 0")
+        var updateRadius = radius
+        if (updateRadius < 0f) {
+            throw IllegalArgumentException("Invalid radius $updateRadius. Must be >= 0")
         }
-        radius = (radius + .5f).toInt().toFloat()
-        if (mCornerRadius == radius) {
+        updateRadius = (updateRadius + .5f).toInt().toFloat()
+        if (mCornerRadius == updateRadius) {
             return
         }
-        mCornerRadius = radius
+        mCornerRadius = updateRadius
         mDirty = true
         invalidateSelf()
     }
 
-    var mTranslatePos: Pair<Pair<Float, Float>, Pair<Float, Float>>? = null
+    private var mTranslatePos: Pair<Pair<Float, Float>, Pair<Float, Float>>? = null
     private var isFirst: Boolean = true
 
     override fun draw(canvas: Canvas) {
