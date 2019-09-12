@@ -45,7 +45,7 @@ signing {
 
 group = "io.github.meetsl"
 archivesBaseName = "SCardView"
-version = "1.1"
+version = "1.2"
 
 uploadArchives {
     repositories {
