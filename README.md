@@ -11,7 +11,7 @@
 > Gradle Groovy DSL
 
 ```
-implementation 'io.github.meetsl:SCardView:1.1'
+implementation 'io.github.meetsl:SCardView:1.2'
 ```
 
 > Attribute
@@ -39,3 +39,22 @@ implementation 'io.github.meetsl:SCardView:1.1'
      <enum name="none" value="7" />
 </attr>
 ```
+#### Update Log
+##### V1.2
+> issue#11 Update the color of card's shadow dynamically
+```
+/**
+     * Updates the shadow color of the CardView
+     *
+     * @param startColor The new startColor to set for the card shadow
+     * @param endColor The new endColor to set for the card shadow
+     */
+    fun setCardShadowColor(@ColorInt startColor: Int, @ColorInt endColor: Int)
+
+    /**
+     * update the both of background color and shadow color of the card view
+     */
+    fun setColors(@ColorInt backgroundColor: Int, @ColorInt shadowStartColor: Int, @ColorInt shadowEndColor: Int)
+```
+
+> issue#7 The attribute of 'layout_gravity = end|right' at the children of SCardView has no effect. This problem has been resolved.
