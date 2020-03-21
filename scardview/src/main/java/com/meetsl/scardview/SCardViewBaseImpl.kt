@@ -26,8 +26,7 @@ open class SCardViewBaseImpl : SCardViewImpl {
                     val roundedCornerRadius = cornerRadius + .5f
                     mCornerRect.set(-roundedCornerRadius, -roundedCornerRadius, roundedCornerRadius, roundedCornerRadius)
                     val saved = canvas.save()
-                    canvas.translate(bounds.left + roundedCornerRadius,
-                            bounds.top + roundedCornerRadius)
+                    canvas.translate(bounds.left + roundedCornerRadius, bounds.top + roundedCornerRadius)
                     if (cornerVisibility == NOLEFTCORNER || cornerVisibility == NOTOPCORNER || cornerVisibility == NOLT_RBCORNER)
                         canvas.drawRect(-roundedCornerRadius, -roundedCornerRadius, 0f, 0f, paint)
                     else

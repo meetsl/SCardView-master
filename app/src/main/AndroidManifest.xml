@@ -20,6 +20,7 @@
         <activity android:name=".CardViewActivity" />
         <activity android:name=".CornerVisibilityActivity" />
         <activity android:name=".RecyclerViewActivity" />
+        <activity android:name=".Issues17Activity" />
     </application>
 
 </manifest>

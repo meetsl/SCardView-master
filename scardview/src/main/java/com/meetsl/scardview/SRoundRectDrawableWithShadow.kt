@@ -49,12 +49,10 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
      * If shadow size is set to a value above max shadow, we print a warning
      */
     private var mPrintedShadowClipWarning = false
-
     private var mLightDirection: Int = DIRECTION_TOP
-
     private var mCornerVisibility: Int = NONE
-
     private var mCardDelegate: SCardViewDelegate
+    private var mTranslatePos: Pair<Pair<Float, Float>, Pair<Float, Float>>? = null
 
     init {
         mShadowStartColor = if (startColor == -1) resources.getColor(R.color.sl_cardview_shadow_start_color) else startColor
@@ -129,6 +127,7 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
         }
         mRawShadowSize = updateShadowSize
         mRawMaxShadowSize = updateMaxShadowSize
+        mTranslatePos = calculateShadowDirection()
         mShadowSize = (updateShadowSize * SHADOW_MULTIPLIER + mInsetShadow.toFloat() + .5f).toInt().toFloat()
         mDirty = true
         invalidateSelf()
@@ -206,26 +205,17 @@ class SRoundRectDrawableWithShadow(cardViewDelegate: SCardViewDelegate, resource
         invalidateSelf()
     }
 
-    private var mTranslatePos: Pair<Pair<Float, Float>, Pair<Float, Float>>? = null
-    private var isFirst: Boolean = true
-
     override fun draw(canvas: Canvas) {
         if (mDirty) {
             buildComponents(bounds)
             mDirty = false
         }
-        mTranslatePos = calculateShadowDirection()
         mTranslatePos?.let {
             canvas.translate(it.first.first, it.first.second)
             drawShadow(canvas)
             canvas.translate(it.second.first, it.second.second)
             sRoundRectHelper?.drawRoundRect(canvas, mCardBounds, mCornerRadius, mCornerVisibility, mPaint)
-            if (isFirst) {
-                mCardDelegate.cardView.requestLayout()
-                isFirst = false
-            }
         }
-
     }
 
     /**

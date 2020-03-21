@@ -18,6 +18,7 @@ class MenuActivity : AppCompatActivity(), View.OnClickListener {
         btn_corner_visibility.setOnClickListener(this)
         btn_cardview.setOnClickListener(this)
         btn_recyclerView.setOnClickListener(this)
+        btn_dynamic_visible.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
@@ -30,6 +31,9 @@ class MenuActivity : AppCompatActivity(), View.OnClickListener {
             }
             R.id.btn_cardview -> {
                 startActivity(Intent(this, CardViewActivity::class.java))
+            }
+            R.id.btn_dynamic_visible -> {
+                startActivity(Intent(this, Issues17Activity::class.java))
             }
             R.id.btn_recyclerView -> {
                 startActivity(Intent(this, RecyclerViewActivity::class.java))
