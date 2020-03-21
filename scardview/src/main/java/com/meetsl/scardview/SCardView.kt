@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.annotation.ColorInt
 import android.util.AttributeSet
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.FrameLayout
@@ -28,6 +29,7 @@ class SCardView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : Fra
     private var mCompatPadding: Boolean = false
 
     private var mPreventCornerOverlap: Boolean = false
+
     /**
      *  是否使用边角区域放置内容
      */
@@ -225,8 +227,9 @@ class SCardView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : Fra
         var updateHeightMeasureSpec = heightMeasureSpec
         when (val widthMode = MeasureSpec.getMode(widthMeasureSpec)) {
             MeasureSpec.EXACTLY, MeasureSpec.AT_MOST -> {
-                val minWidth = ceil(IMPL.getMinWidth(mCardViewDelegate).toDouble()).toInt()
-                updateWidthMeasureSpec = MeasureSpec.makeMeasureSpec(minWidth.coerceAtLeast(MeasureSpec.getSize(widthMeasureSpec)), widthMode)
+                val minWidth =ceil(IMPL.getMinWidth(mCardViewDelegate).toDouble()).toInt()
+                val width = MeasureSpec.getSize(widthMeasureSpec)
+                updateWidthMeasureSpec = MeasureSpec.makeMeasureSpec(minWidth.coerceAtLeast(width), widthMode)
             }
             MeasureSpec.UNSPECIFIED -> {
                 // Do nothing
@@ -236,7 +239,8 @@ class SCardView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : Fra
         when (val heightMode = MeasureSpec.getMode(heightMeasureSpec)) {
             MeasureSpec.EXACTLY, MeasureSpec.AT_MOST -> {
                 val minHeight = ceil(IMPL.getMinHeight(mCardViewDelegate).toDouble()).toInt()
-                updateHeightMeasureSpec = MeasureSpec.makeMeasureSpec(minHeight.coerceAtLeast(MeasureSpec.getSize(heightMeasureSpec)), heightMode)
+                val height = MeasureSpec.getSize(heightMeasureSpec)
+                updateHeightMeasureSpec = MeasureSpec.makeMeasureSpec(minHeight.coerceAtLeast(height), heightMode)
             }
             MeasureSpec.UNSPECIFIED -> {
                 // Do nothing
@@ -261,14 +265,12 @@ class SCardView(context: Context, attrs: AttributeSet?, defStyleAttr: Int) : Fra
         var parentTop: Int
         var parentBottom: Int
         if (movePair != null) {
-            val halfWidth = (right - left) / 2
-            val halfHeight = (bottom - top) / 2
             val verticalMove = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) movePair.second else 0f
             val horizontalMove = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) movePair.first else 0f
-            parentLeft = (halfWidth - rectF.width() / 2 + horizontalMove).toInt()
-            parentRight = (halfWidth + rectF.width() / 2 + horizontalMove).toInt()
-            parentTop = (halfHeight - rectF.height() / 2 + verticalMove).toInt()
-            parentBottom = (halfHeight + rectF.height() / 2 + verticalMove).toInt()
+            parentLeft = horizontalMove.toInt()
+            parentRight = (right - left + horizontalMove).toInt()
+            parentTop = verticalMove.toInt()
+            parentBottom = (bottom - top + verticalMove).toInt()
             //控制边角区域是否显示内容
             if (!mUseCornerArea) {
                 parentLeft += iex

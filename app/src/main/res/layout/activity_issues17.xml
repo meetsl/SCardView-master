@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <com.meetsl.scardview.SCardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/card_corner_visible_margin"
+            app:cardBackgroundColor="@android:color/holo_blue_light"
+            app:cardCornerRadius="@dimen/card_corner_visible_radius"
+            app:cardElevation="@dimen/card_corner_visible_elevation"
+            app:cardLightDirection="top"
+            app:cardPreventCornerOverlap="true"
+            app:cardShadowEndColor="#0333B5E5"
+            app:cardShadowStartColor="#3733B5E5"
+            app:cardUseCompatPadding="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_gravity="end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/ll_container"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/first_child"/>
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.meetsl.scardview.SCardView>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/btn_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:layout_margin="30dp"
+        android:padding="15dp"
+        android:text="@string/add_view"
+        android:textSize="14sp" />
+</FrameLayout>
